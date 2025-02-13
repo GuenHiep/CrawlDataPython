@@ -1,22 +1,26 @@
 import requests
 from bs4 import BeautifulSoup
 
-# URL của trang web cần thu thập dữ liệu
-URL = "https://vnexpress.net/"
+# URL của trang web bạn muốn crawl
+url = 'https://baomoi.com'
 
-# Gửi yêu cầu HTTP GET để lấy nội dung trang web
-response = requests.get(URL)
+# Gửi yêu cầu HTTP GET đến trang web
+response = requests.get(url)
 
-# Kiểm tra xem yêu cầu có thành công không (status code 200)
+# Kiểm tra xem yêu cầu có thành công không
 if response.status_code == 200:
-    # Phân tích cú pháp HTML của trang web
+    # Phân tích cú pháp HTML bằng BeautifulSoup
     soup = BeautifulSoup(response.text, 'html.parser')
     
-    # Lấy tất cả các thẻ tiêu đề (ví dụ: h1, h2, h3)
-    titles = soup.find_all(['h1', 'h2', 'h3'])
+    # Ví dụ: Lấy tiêu đề của trang web
+    title = soup.title.string
+    print(f'Tiêu đề trang web: {title}')
     
-    print("Các tiêu đề trên trang:")
-    for title in titles:
-        print(title.get_text().strip())  # Lấy nội dung văn bản từ thẻ và loại bỏ khoảng trắng
+    # Ví dụ: Lấy tất cả các liên kết (thẻ <a>) trong trang
+    links = soup.find_all('a')
+    for link in links:
+        href = link.get('href')
+        text = link.get_text()
+        print(f'Liên kết: {text} -> {href}')
 else:
-    print(f"Lỗi khi truy cập trang web. Mã lỗi: {response.status_code}")
+    print(f'Không thể truy cập trang web. Mã trạng thái: {response.status_code}')
